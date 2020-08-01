@@ -7,23 +7,23 @@ import (
 )
 
 type user struct {
-	Name string `json:"name"`
-	Gender string `json:"gender"`
+	Name      string    `json:"name"`
+	Gender    string    `json:"gender"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-func (u *user) MarshalJSON() ([]byte,error) {
-	createdAt := u.CreatedAt.Format("2006-01-02 15:04:05")
-	return []byte(fmt.Sprintf(`{"name":"%s","gender":"%s","createdAt":"%s"}`, u.Name, u.Gender, createdAt)), nil
+func (u *user) MarshalJSON() ([]byte, error) {
+	//createdAt := u.CreatedAt.Format("2006-01-02 15:04:05")
+	//return []byte(fmt.Sprintf(`{"name":"%s","gender":"%s","createdAt":"%s"}`, u.Name, u.Gender, createdAt)), nil
 
-	//type AliasUser user
-	//return json.Marshal(&struct {
-	//	CreatedAt string `json:"createdAt"`
-	//	*AliasUser
-	//}{
-	//	CreatedAt: u.CreatedAt.Format("2006-01-02 15:04:05"),
-	//	AliasUser:    (*AliasUser)(u),
-	//})
+	type AliasUser user
+	return json.Marshal(&struct {
+		CreatedAt string `json:"createdAt"`
+		*AliasUser
+	}{
+		CreatedAt: u.CreatedAt.Format("2006-01-02 15:04:05"),
+		AliasUser: (*AliasUser)(u),
+	})
 }
 
 func (u *user) UnmarshalJSON(data []byte) error {
@@ -38,14 +38,12 @@ func (u *user) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &au); err != nil {
 		return err
 	}
-	// newCreatedAt, err := time.ParseInLocation("2006-01-02 15:04:05", au.CreatedAt, time.Local)
 	newCreatedAt, err := time.ParseInLocation("2006-01-02 15:04:05", au.CreatedAt, time.Local)
 	if err != nil {
 		return err
 	}
 
-	// u.CreatedAt = newCreatedAt
-	u.CreatedAt = newCreatedAt.UTC()
+	u.CreatedAt = newCreatedAt
 	return nil
 }
 
