@@ -6,23 +6,25 @@ import (
 )
 
 type user struct {
-	ID      string `json:"id"`
-	Name    string
-	Gender  string
-	Age     int
-	Married bool
-	test    string
+	ID         string `json:"id"`
+	Name       string
+	Gender     string
+	Age        int
+	Married    bool
+	test       string
+	IsHandsome string `json:"ishandsome"` // not sensitive
 }
 
 func main() {
 	// https://www.json.org/json-en.html
 	originalUser := user{
-		ID:      "user1",
-		Name:    "kenny",
-		Gender:  "Male",
-		Age:     23,
-		Married: false,
-		test:    "test",
+		ID:         "user1",
+		Name:       "kenny",
+		Gender:     "Male",
+		Age:        23,
+		Married:    false,
+		test:       "test",
+		IsHandsome: "fuck",
 	}
 	b, err := json.Marshal(originalUser)
 	if err != nil {
